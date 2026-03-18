@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Quoto — The Future of Home Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#0c0c0e;
+  --ink2:#141416;
+  --ink3:#1e1e22;
+  --ink4:#28282e;
+  --gold:#f0a500;
+  --gold2:#ffc13d;
+  --gold-dim:rgba(240,165,0,.12);
+  --gold-border:rgba(240,165,0,.25);
+  --chalk:#f5f3ee;
+  --chalk2:#e8e4da;
+  --muted:#8a8790;
+  --muted2:#5a5860;
+  --line:rgba(255,255,255,.07);
+  --line2:rgba(255,255,255,.12);
+  --green:#22c55e;
+  --green-dim:rgba(34,197,94,.12);
+  --red:#f87171;
+  --red-dim:rgba(248,113,113,.12);
+  --amber:#fbbf24;
+  --amber-dim:rgba(251,191,36,.12);
+  --blue:#60a5fa;
+  --blue-dim:rgba(96,165,250,.12);
+  --sh:0 2px 8px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.3);
+  --sh-lg:0 8px 32px rgba(0,0,0,.5),0 32px 80px rgba(0,0,0,.4);
+  --r:14px;--r-lg:20px;
+  --font:'DM Sans',sans-serif;
+  --serif:'Instrument Serif',serif;
+}
+body{background:var(--ink);color:var(--chalk);font-family:var(--font);font-size:15px;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── APP SHELL ── */
+.app{display:flex;flex-direction:column;min-height:100vh;max-width:480px;margin:0 auto;background:var(--ink);position:relative;overflow:hidden}
+.app::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:480px;height:100vh;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(240,165,0,.06) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+/* ── SCREENS ── */
+.screen{display:none;flex-direction:column;flex:1;position:relative;z-index:1}
+.screen.active{display:flex;animation:fadeUp .28s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SCROLLABLE BODY ── */
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.scroll-body::-webkit-scrollbar{width:0}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;background:rgba(12,12,14,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.logo-lockup{display:flex;align-items:center;gap:9px}
+.logo-gem{width:32px;height:32px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--ink);letter-spacing:-.5px;flex-shrink:0;box-shadow:0 2px 12px rgba(240,165,0,.4)}
+.logo-name{font-size:18px;font-weight:700;color:var(--chalk);letter-spacing:-.4px}
+.logo-name span{color:var(--gold)}
+.logo-home{cursor:pointer;transition:opacity .15s}
+.logo-home:hover{opacity:.75}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;background:none;border:none;font-family:var(--font);padding:6px 0;transition:color .15s}
+.back-btn:hover{color:var(--chalk)}
+.topbar-spacer{width:60px}
+
+/* ── PAGE ── */
+.page{padding:22px 20px;display:flex;flex-direction:column;gap:16px}
+
+/* ── TYPE ── */
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.display-title{font-family:var(--serif);font-size:30px;line-height:1.1;color:var(--chalk);letter-spacing:-.3px}
+.display-title em{color:var(--gold);font-style:italic}
+.body-copy{font-size:14px;color:var(--muted);line-height:1.65;font-weight:400}
+.label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px;text-transform:uppercase;margin-bottom:6px;display:block}
+
+/* ── INPUTS ── */
+.field{display:flex;flex-direction:column;gap:5px}
+input,textarea,select{
+  width:100%;padding:13px 15px;
+  border-radius:11px;
+  background:var(--ink3);
+  border:1.5px solid var(--line2);
+  color:var(--chalk);font-family:var(--font);font-size:14px;font-weight:500;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(240,165,0,.15)}
+textarea{resize:none;min-height:100px;line-height:1.6}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a8790' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+select option{background:var(--ink3);color:var(--chalk)}
+input::placeholder,textarea::placeholder{color:var(--muted2);font-weight:400}
+
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:var(--font);transition:all .2s;letter-spacing:.1px;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .15s}
+.btn:active::after{background:rgba(255,255,255,.08)}
+.btn-gold{background:var(--gold);color:var(--ink);box-shadow:0 2px 16px rgba(240,165,0,.35)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 4px 24px rgba(240,165,0,.45)}
+.btn-gold:active{transform:translateY(0)}
+.btn-ghost{background:var(--ink3);color:var(--chalk);border:1.5px solid var(--line2)}
+.btn-ghost:hover{border-color:var(--gold-border);background:var(--ink4)}
+.btn-outline{background:transparent;color:var(--gold);border:1.5px solid var(--gold-border)}
+.btn-outline:hover{background:var(--gold-dim)}
+.btn-danger{background:transparent;color:var(--red);border:1.5px solid rgba(248,113,113,.25)}
+.btn-danger:hover{background:var(--red-dim)}
+.btn-sm{padding:9px 14px;font-size:13px;border-radius:9px}
+.btn-full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+
+/* ── CARDS ── */
+.card{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:var(--sh)}
+.card-gold{border-color:var(--gold-border);background:linear-gradient(135deg,rgba(240,165,0,.08) 0%,var(--ink2) 60%)}
+.card-glass{background:rgba(255,255,255,.03);backdrop-filter:blur(8px);border:1px solid var(--line2)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.badge-gold{background:rgba(240,165,0,.15);color:var(--gold);border:1px solid var(--gold-border)}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(251,191,36,.25)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(96,165,250,.25)}
+.badge-muted{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--line2)}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:12px;color:var(--muted2);font-size:11px;font-weight:700;letter-spacing:1px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* ── HINT ── */
+.hint{font-size:12px;color:var(--muted2);text-align:center;line-height:1.6}
+.hint a{color:var(--gold);cursor:pointer;font-weight:600;text-decoration:none}
+.err{font-size:12px;color:var(--red);font-weight:600;display:none;padding:8px 12px;background:var(--red-dim);border-radius:8px;border:1px solid rgba(248,113,113,.2)}
+.err.show{display:block}
+
+/* ── PHOTO ZONE ── */
+.pzone{border:2px dashed rgba(255,255,255,.15);border-radius:var(--r);background:var(--ink3);cursor:pointer;transition:all .2s;position:relative;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;text-align:center}
+.pzone:hover,.pzone.over{border-color:var(--gold);background:var(--gold-dim)}
+.pzone.filled{padding:0;border-style:solid;border-color:rgba(255,255,255,.15);min-height:0}
+.pzone input[type=file]{display:none}
+.pzone-icon{width:42px;height:42px;background:var(--ink4);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:18px}
+.pzone-preview{width:100%;max-height:220px;object-fit:cover;border-radius:12px;display:block}
+.pzone-rm{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.7);color:var(--chalk);border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s;z-index:5}
+.pzone-rm:hover{background:rgba(248,113,113,.8)}
+.photo-row{display:flex;gap:10px}
+.camera-btn{width:86px;flex-shrink:0;border:2px dashed rgba(255,255,255,.15);border-radius:var(--r);background:var(--ink3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .2s;padding:12px 8px}
+.camera-btn:hover{border-color:var(--gold);background:var(--gold-dim)}
+.camera-btn-icon{font-size:22px;line-height:1}
+.camera-btn-label{font-size:11px;font-weight:700;color:var(--gold);text-align:center;line-height:1.3}
+
+/* ── JOB CARD ── */
+.jcard{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--gold-border);box-shadow:0 0 0 1px rgba(240,165,0,.05),var(--sh)}
+.jcard-head{background:linear-gradient(135deg,var(--ink3) 0%,var(--ink2) 100%);padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.jcard-head h3{font-size:15px;font-weight:700;color:var(--chalk);line-height:1.3;flex:1}
+.jcard-body{background:var(--ink2)}
+.jrow{display:flex;gap:12px;align-items:flex-start;padding:13px 18px;border-bottom:1px solid var(--line)}
+.jrow:last-child{border-bottom:none}
+.jrow-icon{width:32px;height:32px;border-radius:8px;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
+.jrow-label{font-size:9px;font-weight:700;color:var(--muted2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.jrow-value{font-size:13px;color:var(--chalk2);line-height:1.55;font-weight:500}
+.tools-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tool-chip{background:var(--ink3);border:1px solid var(--line2);border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;color:var(--chalk2);line-height:1.4}
+
+/* ── QUOTE CARD ── */
+.qcard{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;position:relative;transition:all .2s;box-shadow:var(--sh)}
+.qcard:hover{border-color:var(--gold-border);transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.qcard.winner{border-color:var(--gold);box-shadow:0 0 0 1px rgba(240,165,0,.2),var(--sh-lg)}
+.winner-tag{position:absolute;top:-1px;left:16px;background:var(--gold);color:var(--ink);font-size:9px;font-weight:800;padding:3px 10px;border-radius:0 0 8px 8px;letter-spacing:1px}
+.qprice{font-family:var(--serif);font-size:30px;color:var(--gold);line-height:1;letter-spacing:-.5px}
+.qchip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;background:var(--ink3);font-size:12px;color:var(--muted);font-weight:500;border:1px solid var(--line)}
+
+/* ── LOADING ── */
+.ldwrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:40px 20px}
+.ld-ring{width:52px;height:52px;border-radius:50%;border:3px solid var(--line2);border-top-color:var(--gold);animation:spin .8s linear infinite;box-shadow:0 0 20px rgba(240,165,0,.2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ld-title{font-size:17px;font-weight:700;color:var(--chalk);letter-spacing:-.3px;text-align:center}
+.ld-sub{font-size:13px;color:var(--muted);text-align:center;margin-top:-12px}
+.step-list{width:100%;max-width:300px;display:flex;flex-direction:column;gap:5px}
+.step{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:10px;font-size:13px;color:var(--muted2);background:var(--ink2);border:1px solid transparent;transition:all .3s;font-weight:500}
+.step.live{color:var(--gold);background:var(--gold-dim);border-color:var(--gold-border);animation:stepPulse 1.5s ease infinite}
+.step.done{color:var(--green);background:var(--green-dim);border-color:rgba(34,197,94,.2)}
+@keyframes stepPulse{0%,100%{opacity:1}50%{opacity:.7}}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--line2);flex-shrink:0}
+.step.live .sdot{background:var(--gold)}
+.step.done .sdot{background:var(--green)}
+
+/* ── SUCCESS ── */
+.success-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 20px;gap:14px}
+.success-ring{width:74px;height:74px;border-radius:50%;border:2px solid var(--green);background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:28px;animation:popIn .4s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── AUTH ── */
+.auth-body{display:flex;flex-direction:column;flex:1;padding:22px 20px;gap:18px;overflow-y:auto}
+.auth-hero{padding:22px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--ink3) 0%,var(--ink2) 100%);border:1px solid var(--gold-border);position:relative;overflow:hidden}
+.auth-hero::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(240,165,0,.2) 0%,transparent 70%);border-radius:50%}
+.auth-hero h2{font-family:var(--serif);font-size:24px;color:var(--chalk);margin-bottom:5px;position:relative;z-index:1}
+.auth-hero p{font-size:13px;color:var(--muted);line-height:1.6;position:relative;z-index:1}
+.plan-card{border:1.5px solid var(--line2);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .15s;background:var(--ink2);position:relative}
+.plan-card:hover{border-color:var(--gold-border);background:var(--ink3)}
+.plan-card.sel{border-color:var(--gold);background:var(--gold-dim)}
+.plan-hot{position:absolute;top:-1px;right:14px;background:var(--gold);color:var(--ink);font-size:9px;font-weight:800;padding:3px 9px;border-radius:0 0 7px 7px;letter-spacing:1px}
+.plan-name{font-size:14px;font-weight:700;color:var(--chalk)}
+.plan-price{font-family:var(--serif);font-size:22px;color:var(--gold);margin:2px 0}
+.plan-price span{font-size:13px;font-family:var(--font);font-weight:500;color:var(--muted)}
+.plan-feat{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+/* ── PORTAL ── */
+.portal-head{background:var(--ink2);border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.portal-brand{display:flex;align-items:center;gap:8px}
+.portal-gem{width:28px;height:28px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:var(--ink)}
+.portal-name{font-size:15px;font-weight:700;color:var(--chalk)}
+.portal-tag{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.portal-avatar{width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--ink);cursor:pointer}
+.portal-tabs{display:flex;background:var(--ink2);border-bottom:1px solid var(--line)}
+.ptab{flex:1;padding:12px 6px;text-align:center;font-size:11px;font-weight:700;cursor:pointer;color:var(--muted2);border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.5px;text-transform:uppercase;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
+.ptab.on{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── FEED ITEM ── */
+.fitem{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;transition:all .2s;box-shadow:var(--sh)}
+.fitem:hover{border-color:var(--gold-border);box-shadow:var(--sh-lg);transform:translateY(-1px)}
+.fitem-top{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.fitem-title{font-size:14px;font-weight:700;color:var(--chalk);line-height:1.3}
+.fitem-loc{font-size:12px;color:var(--muted);margin-top:2px;font-weight:500}
+.fitem-body{padding:12px 15px}
+.new-badge{display:inline-flex;align-items:center;gap:4px;background:var(--red-dim);color:var(--red);border:1px solid rgba(248,113,113,.25);border-radius:999px;font-size:9px;font-weight:800;padding:2px 7px;letter-spacing:.5px}
+.new-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:blip 1s infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.stat-num{font-family:var(--serif);font-size:24px;color:var(--chalk);line-height:1;letter-spacing:-.3px}
+.stat-num.or{color:var(--gold)}
+.stat-lbl{font-size:10px;font-weight:700;color:var(--muted);margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+
+/* ── LANDING HERO ── */
+.land-hero{padding:36px 20px 28px;position:relative;overflow:hidden;background:var(--ink2);border-bottom:1px solid var(--line)}
+.land-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% -10%,rgba(240,165,0,.15) 0%,transparent 65%);pointer-events:none}
+.land-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-border),transparent)}
+.live-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid var(--line2);border-radius:999px;padding:5px 13px;font-size:11px;font-weight:700;color:var(--chalk2);margin-bottom:18px;letter-spacing:.3px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:glow 1.5s ease infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 8px var(--green)}50%{box-shadow:0 0 16px var(--green)}}
+.hero-title{font-family:var(--serif);font-size:36px;line-height:1.05;color:var(--chalk);letter-spacing:-.5px;margin-bottom:12px}
+.hero-title em{color:var(--gold);font-style:italic}
+.hero-sub{font-size:14px;color:var(--muted);line-height:1.65;max-width:340px}
+.hero-stats{display:flex;gap:0;margin-top:22px;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden}
+.hero-stat{flex:1;padding:10px;text-align:center;border-right:1px solid var(--line2)}
+.hero-stat:last-child{border-right:none}
+.hs-num{font-family:var(--serif);font-size:20px;color:var(--gold);line-height:1}
+.hs-lbl{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;letter-spacing:.3px}
+
+/* ── CHOICE CARDS ── */
+.choice-card{border-radius:var(--r-lg);padding:18px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:all .2s;border:1.5px solid var(--line2);background:var(--ink2);box-shadow:var(--sh)}
+.choice-card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+.choice-card.light-card:hover{border-color:var(--gold-border)}
+.choice-card.dark-card{background:var(--ink3)}
+.choice-card.dark-card:hover{border-color:var(--gold)}
+.choice-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.choice-icon.warm{background:var(--gold-dim);border:1px solid var(--gold-border)}
+.choice-icon.cool{background:rgba(255,255,255,.06);border:1px solid var(--line2)}
+.choice-title{font-size:15px;font-weight:700;color:var(--chalk)}
+.choice-sub{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+.choice-arr{font-size:20px;color:var(--gold);margin-left:auto;font-weight:700}
+
+/* ── API KEY MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-overlay.hidden{display:none}
+.modal-sheet{background:var(--ink2);border:1px solid var(--line2);border-radius:24px 24px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;animation:slideSheet .3s cubic-bezier(.2,.8,.3,1)}
+@keyframes slideSheet{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--line2);border-radius:999px;margin:0 auto 22px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink3);border:1px solid var(--line2);color:var(--chalk);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;z-index:999;transition:transform .3s cubic-bezier(.2,.8,.3,1);white-space:nowrap;box-shadow:var(--sh-lg);pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(34,197,94,.3);color:var(--green)}
+.toast.error{border-color:rgba(248,113,113,.3);color:var(--red)}
+
+/* ── ROW UTIL ── */
+.row{display:flex;align-items:center;justify-content:space-between}
+.col2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sep{height:1px;background:var(--line);margin:2px 0}
+.chip-row{display:flex;gap:7px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+<!-- ════════════ LANDING ════════════ -->
+<div class="screen active" id="s-land">
+  <div class="land-hero">
+    <div class="live-pill"><div class="live-dot"></div>Live Now &mdash; South Florida</div>
+    <div class="hero-title">The <em>smartest</em> way<br>to hire a pro.</div>
+    <p class="hero-sub">Snap a photo. Describe the problem. Get real quotes from verified local contractors in hours &mdash; not weeks.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hs-num">1-2hr</div><div class="hs-lbl">Avg quote time</div></div>
+      <div class="hero-stat"><div class="hs-num">4.9★</div><div class="hs-lbl">Avg contractor</div></div>
+      <div class="hero-stat"><div class="hs-num">$0</div><div class="hs-lbl">For homeowners</div></div>
+    </div>
+  </div>
+  <div class="page" style="gap:12px;padding-top:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px"><div class="eyebrow" style="margin-bottom:0">Get started</div><button id="btn-about" style="background:none;border:none;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:var(--font);letter-spacing:.3px;padding:4px 0">How it works &#8250;</button></div>
+    <div id="btn-home" class="choice-card light-card">
+      <div class="choice-icon warm">&#127968;</div>
+      <div><div class="choice-title">I'm a Homeowner</div><div class="choice-sub">Get quotes for any home service job</div></div>
+      <div class="choice-arr">&#8250;</div>
+    </div>
+    <div id="btn-pro" class="choice-card dark-card">
+      <div class="choice-icon cool">&#128296;</div>
+      <div><div class="choice-title">I'm a Contractor</div><div class="choice-sub">Receive pre-scoped leads &amp; grow revenue</div></div>
+      <div class="choice-arr">&#8250;</div>
+    </div>
+    <div class="divider" style="margin-top:4px">trades we serve</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+      <span class="badge badge-gold">&#9889; Electrical</span>
+      <span class="badge badge-blue">&#128296; Plumbing</span>
+      <span class="badge badge-muted">&#10052; HVAC</span>
+      <span class="badge badge-muted">&#127807; Landscaping</span>
+      <span class="badge badge-muted">&#127912; Painting</span>
+      <span class="badge badge-muted">&#129683; Carpentry</span>
+      <span class="badge badge-muted">&#127968; Roofing</span>
+      <span class="badge badge-muted">+ More</span>
+    </div>
+    <div class="hint" style="margin-top:4px">By continuing you agree to our <a>Terms</a> &amp; <a>Privacy Policy</a></div>
+  </div>
+</div>
+
+<!-- ════════════ CUSTOMER GATE ════════════ -->
+<div class="screen" id="s-cg">
+  <div class="topbar"><button class="back-btn" id="b-cg-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div class="auth-hero"><h2>Free for homeowners.</h2><p>Create an account to submit jobs, track quotes, message contractors, and book pros &mdash; all in one place.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-gold btn-full" id="b-cg-su">Create free account</button>
+      <button class="btn btn-ghost btn-full" id="b-cg-li">Log in</button>
+    </div>
+    <div class="divider">or</div>
+    <button class="btn btn-outline btn-full" id="b-cg-guest">Continue as guest &rarr;</button>
+    <div class="hint">Guest accounts don't save history or send booking confirmations</div>
+  </div>
+</div>
+
+<!-- ════════════ CUSTOMER LOGIN ════════════ -->
+<div class="screen" id="s-cl">
+  <div class="topbar"><button class="back-btn" id="b-cl-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div><div class="eyebrow">Welcome back</div><div class="display-title">Log in to<br>your account.</div></div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="field"><label class="label">Email address</label><input type="email" id="cl-em" placeholder="you@example.com"/></div>
+      <div class="field"><label class="label">Password</label><input type="password" id="cl-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"/></div>
+      <div class="err" id="cl-err">Incorrect email or password.</div>
+    </div>
+    <button class="btn btn-gold btn-full" id="b-cl-go">Log In &rarr;</button>
+    <div class="hint">Demo: <strong style="color:var(--chalk)">home@quoto.com</strong> / <strong style="color:var(--chalk)">home1234</strong></div>
+    <div class="hint"><a id="b-cl-2su">Don't have an account? Sign up free</a></div>
+  </div>
+</div>
+
+<!-- ════════════ CUSTOMER SIGNUP ════════════ -->
+<div class="screen" id="s-cs">
+  <div class="topbar"><button class="back-btn" id="b-cs-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div><div class="eyebrow">Create account</div><div class="display-title">Your home,<br><em>sorted.</em></div></div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="col2">
+        <div class="field"><label class="label">First name</label><input type="text" id="cs-fn" placeholder="Owen"/></div>
+        <div class="field"><label class="label">Last name</label><input type="text" id="cs-ln" placeholder="Smith"/></div>
+      </div>
+      <div class="field"><label class="label">Email</label><input type="email" id="cs-em" placeholder="you@example.com"/></div>
+      <div class="field"><label class="label">Phone</label><input type="tel" id="cs-ph" placeholder="(555) 867-5309"/></div>
+      <div class="field"><label class="label">Home address</label><input type="text" id="cs-ad" placeholder="123 Main St"/></div>
+      <div class="col2">
+        <div class="field"><label class="label">City</label><input type="text" id="cs-ci" placeholder="Pembroke Pines"/></div>
+        <div class="field"><label class="label">Zip</label><input type="text" id="cs-zp" placeholder="33025" maxlength="5"/></div>
+      </div>
+      <div class="field"><label class="label">Password</label><input type="password" id="cs-pw" placeholder="Min 6 characters"/></div>
+      <div class="err" id="cs-err">Please fill in all required fields.</div>
+    </div>
+    <button class="btn btn-gold btn-full" id="b-cs-go">Create Account &rarr;</button>
+    <div class="hint">Free forever &middot; No credit card needed</div>
+  </div>
+</div>
+
+<!-- ════════════ SUBMIT JOB ════════════ -->
+<div class="screen" id="s-job">
+  <div class="topbar">
+    <button class="back-btn" id="b-job-bk">&#8592; Back</button>
+    <div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div>
+    <div id="job-avatar" style="width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--ink);cursor:pointer;flex-shrink:0"></div>
+  </div>
+  <div class="scroll-body"><div class="page">
+    <div><div class="eyebrow">New request</div><div class="display-title">What needs<br>to be fixed?</div><p class="body-copy" style="margin-top:8px">Our AI analyzes your job and builds a detailed scope card &mdash; so contractors can quote accurately without a site visit.</p></div>
+    <div class="field"><label class="label">Trade type</label>
+      <select id="j-trade">
+        <option value="">Select a trade...</option>
+        <option value="Plumbing">&#128296; Plumbing</option>
+        <option value="Electrical">&#9889; Electrical</option>
+        <option value="HVAC">&#10052; HVAC</option>
+        <option value="Carpentry">&#129683; Carpentry</option>
+        <option value="Painting">&#127912; Painting</option>
+        <option value="Landscaping">&#127807; Landscaping</option>
+        <option value="Roofing">&#127968; Roofing</option>
+        <option value="General Contracting">&#128736; General Contracting</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="label">Photo <span style="font-weight:400;color:var(--muted2);text-transform:none;letter-spacing:0">(optional &mdash; greatly improves AI accuracy)</span></label>
+      <div class="photo-row">
+        <div class="pzone" id="pzone" style="flex:1">
+          <input type="file" id="photo-file" accept="image/*"/>
+          <div id="pz-inner">
+            <div class="pzone-icon">&#128193;</div>
+            <p style="font-size:13px;color:var(--muted)"><strong style="color:var(--gold);font-weight:700">Click to upload</strong></p>
+            <p style="font-size:11px;color:var(--muted2);margin-top:3px">or drag any photo here</p>
+          </div>
+          <img id="pz-img" class="pzone-preview" style="display:none" alt=""/>
+          <button class="pzone-rm" id="pz-rm" style="display:none">&#10005; Remove</button>
+        </div>
+        <div class="camera-btn" id="btn-cam">
+          <input type="file" id="camera-file" accept="image/*" capture="environment"/>
+          <div class="camera-btn-icon">&#128247;</div>
+          <div class="camera-btn-label">Take<br>Photo</div>
+        </div>
+      </div>
+    </div>
+    <div class="field"><label class="label">Describe the problem</label><textarea id="j-desc" placeholder="Be specific &mdash; e.g. 'My kitchen sink has been leaking under the cabinet for 2 days. The pipe connection looks corroded and there is water damage visible on the cabinet floor...'"></textarea></div>
+    <div class="field"><label class="label">Zip code</label><input type="text" id="j-zip" placeholder="e.g. 33025" maxlength="5" style="max-width:150px"/></div>
+    <button class="btn btn-gold btn-full" id="btn-submit-job">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Get My Quotes Now
+    </button>
+    <div class="hint" id="job-hint">Free for homeowners &middot; Always</div>
+  </div></div>
+</div>
+
+<!-- ════════════ ANALYZING ════════════ -->
+<div class="screen" id="s-ana">
+  <div class="topbar" style="justify-content:center"><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div></div>
+  <div class="ldwrap">
+    <div class="ld-ring"></div>
+    <div class="ld-title">Analyzing your job</div>
+    <div class="ld-sub">Building your AI job card...</div>
+    <div class="step-list">
+      <div class="step live" id="ls1"><div class="sdot"></div>Reading your description</div>
+      <div class="step" id="ls2"><div class="sdot"></div>Identifying scope of work</div>
+      <div class="step" id="ls3"><div class="sdot"></div>Compiling tools &amp; materials</div>
+      <div class="step" id="ls4"><div class="sdot"></div>Calculating hours &amp; cost</div>
+      <div class="step" id="ls5"><div class="sdot"></div>Notifying local contractors</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ JOB CARD + QUOTES ════════════ -->
+<div class="screen" id="s-jcard">
+  <div class="topbar">
+    <button class="back-btn" id="b-jc-bk">&#8592; Edit</button>
+    <div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div>
+    <div class="topbar-spacer"></div>
+  </div>
+  <div class="scroll-body"><div class="page">
+    <div><div class="eyebrow">AI Job Card Generated</div><p class="body-copy">Sent to verified contractors. Quotes appear below as they come in.</p></div>
+    <div id="jcard-display"></div>
+    <div id="waiting-block" class="card" style="text-align:center;border-style:dashed;border-color:var(--gold-border)">
+      <div style="font-size:26px;margin-bottom:10px">&#9203;</div>
+      <div style="font-weight:700;color:var(--chalk);font-size:15px;margin-bottom:4px">Waiting for quotes</div>
+      <p class="body-copy" style="font-size:13px;margin-bottom:16px">3 verified contractors in your area have been notified. Quotes typically arrive within 1&ndash;2 hours.</p>
+      <button class="btn btn-ghost btn-sm" id="btn-sim" style="margin:0 auto">&#9654; Simulate quotes arriving</button>
+    </div>
+    <div id="quotes-block" style="display:none">
+      <div class="eyebrow" style="margin-bottom:10px">Quotes received</div>
+      <div id="quotes-list" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ════════════ BOOKED ════════════ -->
+<div class="screen" id="s-booked">
+  <div class="topbar" style="justify-content:center"><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div></div>
+  <div class="page">
+    <div class="success-wrap">
+      <div class="success-ring">&#10003;</div>
+      <div class="display-title">You're booked!</div>
+      <p class="body-copy" id="booked-msg">Your contractor has been confirmed.</p>
+    </div>
+    <div class="card card-gold" id="booked-detail"></div>
+    <div class="card" style="border-color:var(--gold-border)">
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--muted);line-height:1.6">
+        <div><strong style="color:var(--chalk)">&#128274; Secure deposit</strong> &mdash; Payment is held in escrow and only releases once you confirm the job is complete.</div>
+        <div style="height:1px;background:var(--line)"></div>
+        <div><strong style="color:var(--chalk)">&#128241; Real-time updates</strong> &mdash; You'll receive a text when your contractor is on the way.</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-full" id="b-book-again">Submit another job</button>
+  </div>
+</div>
+
+<!-- ════════════ CUSTOMER PROFILE ════════════ -->
+<div class="screen" id="s-prof">
+  <div class="topbar"><button class="back-btn" id="b-prof-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="scroll-body"><div class="page">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div id="prof-av" style="width:56px;height:56px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:var(--ink);flex-shrink:0"></div>
+      <div><div id="prof-nm" style="font-weight:800;font-size:18px;color:var(--chalk)"></div><div id="prof-em" style="font-size:13px;color:var(--muted);margin-top:2px"></div></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:12px">Contact info</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="row"><span style="font-size:13px;color:var(--muted);font-weight:500">Phone</span><span id="prof-ph" style="font-size:13px;font-weight:600;color:var(--chalk)"></span></div>
+        <div class="sep"></div>
+        <div class="row"><span style="font-size:13px;color:var(--muted);font-weight:500">Address</span><span id="prof-ad" style="font-size:13px;font-weight:600;color:var(--chalk);text-align:right;max-width:200px;line-height:1.4"></span></div>
+        <div class="sep"></div>
+        <div class="row"><span style="font-size:13px;color:var(--muted);font-weight:500">Zip code</span><span id="prof-zp" style="font-size:13px;font-weight:600;color:var(--chalk)"></span></div>
+      </div>
+    </div>
+    <div class="card"><div class="eyebrow" style="margin-bottom:10px">Job history</div><div id="prof-hist" style="font-size:13px;color:var(--muted2)">No jobs submitted yet.</div></div>
+    <button class="btn btn-danger btn-full" id="b-cust-lo">Log Out</button>
+  </div></div>
+</div>
+
+<!-- ════════════ CONTRACTOR GATE ════════════ -->
+<div class="screen" id="s-gate">
+  <div class="topbar"><button class="back-btn" id="b-gate-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div class="auth-hero"><h2>Contractor Portal</h2><p>Pre-scoped job leads with AI-generated tools lists, time estimates, and urgency ratings. Quote faster, win more, waste less time.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-gold btn-full" id="b-gate-li">Log in to existing account</button>
+      <button class="btn btn-ghost btn-full" id="b-gate-su">Create new account</button>
+    </div>
+    <div class="divider">or use access code</div>
+    <div class="field"><label class="label">Access code</label><input type="text" id="code-in" placeholder="Enter code" style="text-align:center;letter-spacing:4px;text-transform:uppercase;font-weight:700" maxlength="12"/></div>
+    <button class="btn btn-outline btn-full" id="b-redeem">Redeem Code</button>
+    <div class="err" id="code-err" style="text-align:center">Invalid code. Try <strong>QUOTO2024</strong> for demo access.</div>
+    <div class="hint" style="text-align:left">Access codes are issued when you sign up with a Quoto representative.</div>
+  </div>
+</div>
+
+<!-- ════════════ CONTRACTOR LOGIN ════════════ -->
+<div class="screen" id="s-login">
+  <div class="topbar"><button class="back-btn" id="b-li-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div><div class="eyebrow">Contractor login</div><div class="display-title">Welcome<br>back.</div></div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="field"><label class="label">Email</label><input type="email" id="li-em" placeholder="you@example.com"/></div>
+      <div class="field"><label class="label">Password</label><input type="password" id="li-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"/></div>
+      <div class="err" id="li-err">Incorrect email or password.</div>
+    </div>
+    <button class="btn btn-gold btn-full" id="b-li-go">Log In &rarr;</button>
+    <div class="hint">Demo: <strong style="color:var(--chalk)">demo@quoto.com</strong> / <strong style="color:var(--chalk)">demo1234</strong></div>
+    <div class="hint"><a id="b-li-2su">No account yet? Sign up</a></div>
+  </div>
+</div>
+
+<!-- ════════════ CONTRACTOR SIGNUP ════════════ -->
+<div class="screen" id="s-su">
+  <div class="topbar"><button class="back-btn" id="b-su-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="auth-body">
+    <div><div class="eyebrow">Create contractor account</div><div class="display-title">Choose your<br><em>plan.</em></div><p class="body-copy" style="margin-top:8px;font-size:13px">All plans include AI job cards, verified pro badge, and direct homeowner leads.</p></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="plan-card" id="plan-s">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$99<span>/month</span></div>
+        <div class="plan-feat" style="margin-top:6px;display:flex;flex-direction:column;gap:3px">
+          <div>&#10003; 1 trade category</div>
+          <div>&#10003; 1 city coverage</div>
+          <div>&#10003; Up to 20 quotes/month</div>
+          <div>&#10003; Verified Pro badge</div>
+          <div>&#10003; Full AI job card access</div>
+        </div>
+      </div>
+      <div class="plan-card sel" id="plan-p">
+        <div class="plan-hot">MOST POPULAR</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$199<span>/month</span></div>
+        <div class="plan-feat" style="margin-top:6px;display:flex;flex-direction:column;gap:3px">
+          <div>&#10003; 2 trade categories</div>
+          <div>&#10003; 3 city coverage</div>
+          <div>&#10003; Unlimited quotes</div>
+          <div>&#10003; Featured listing placement</div>
+          <div>&#10003; Verified Pro badge</div>
+          <div>&#10003; Full AI job card + photo analysis</div>
+          <div>&#10003; Earnings dashboard</div>
+        </div>
+      </div>
+      <div class="plan-card" id="plan-e">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price">$299<span>/month</span></div>
+        <div class="plan-feat" style="margin-top:6px;display:flex;flex-direction:column;gap:3px">
+          <div>&#10003; All trade categories</div>
+          <div>&#10003; Statewide coverage</div>
+          <div>&#10003; Unlimited quotes</div>
+          <div>&#10003; Priority placement (shown first)</div>
+          <div>&#10003; Advanced analytics dashboard</div>
+          <div>&#10003; Dedicated account manager</div>
+          <div>&#10003; Early access to new features</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--ink3);border:1px solid var(--line2);border-radius:var(--r);padding:14px;font-size:12px;color:var(--muted);line-height:1.6">
+      &#128274; <strong style="color:var(--chalk)">30-day free trial</strong> on all plans. Cancel anytime. No credit card required to start. Plans renew monthly &mdash; cancel before your trial ends and you won't be charged.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:11px">
+      <div class="col2">
+        <div class="field"><label class="label">First name</label><input type="text" id="su-fn" placeholder="Mike"/></div>
+        <div class="field"><label class="label">Last name</label><input type="text" id="su-ln" placeholder="Johnson"/></div>
+      </div>
+      <div class="field"><label class="label">Business name</label><input type="text" id="su-biz" placeholder="Johnson Plumbing LLC"/></div>
+      <div class="field"><label class="label">Phone number</label><input type="tel" id="su-ph" placeholder="(555) 867-5309"/></div>
+      <div class="field"><label class="label">Email</label><input type="email" id="su-em" placeholder="mike@business.com"/></div>
+      <div class="field"><label class="label">Password</label><input type="password" id="su-pw" placeholder="Create a password"/></div>
+      <div class="err" id="su-err">Please fill in all fields.</div>
+    </div>
+    <button class="btn btn-gold btn-full" id="b-su-go">Create Account &mdash; Start Free Trial &rarr;</button>
+    <div class="hint">30-day free trial &middot; No card required &middot; Cancel anytime</div>
+  </div>
+</div>
+
+<!-- ════════════ CONTRACTOR PORTAL ════════════ -->
+<div class="screen" id="s-portal">
+  <div class="portal-head">
+    <div class="portal-brand">
+      <div class="portal-gem">Q</div>
+      <div><div class="portal-name">Quoto</div><div class="portal-tag">Contractor Portal</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="portal-avatar" id="p-av">MJ</div>
+      <div id="b-portal-lo" style="font-size:11px;color:var(--muted2);cursor:pointer;padding:6px;font-weight:600">&#10005;</div>
+    </div>
+  </div>
+  <div class="portal-tabs">
+    <button class="ptab on" id="ptab-feed">Job Feed</button>
+    <button class="ptab" id="ptab-quotes">My Quotes</button>
+    <button class="ptab" id="ptab-earn">Earnings</button>
+  </div>
+  <div id="pt-feed" class="scroll-body" style="flex:1">
+    <div class="page"><div id="feed-list" style="display:flex;flex-direction:column;gap:10px"></div></div>
+  </div>
+  <div id="pt-quotes" class="scroll-body" style="display:none;flex:1">
+    <div class="page">
+      <div class="eyebrow">Active quotes</div>
+      <div id="my-quotes-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </div>
+  <div id="pt-earn" class="scroll-body" style="display:none;flex:1">
+    <div class="page">
+      <div class="eyebrow">This month</div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num or">$3,240</div><div class="stat-lbl">Earned</div></div>
+        <div class="stat-box"><div class="stat-num">8</div><div class="stat-lbl">Jobs won</div></div>
+        <div class="stat-box"><div class="stat-num">4.9&#9733;</div><div class="stat-lbl">Rating</div></div>
+        <div class="stat-box"><div class="stat-num">62%</div><div class="stat-lbl">Win rate</div></div>
+      </div>
+      <div class="card card-gold"><div class="eyebrow">Your subscription</div>
+        <div class="row" style="margin-top:8px">
+          <div><div style="font-weight:700;color:var(--chalk)" id="p-plan-nm">Pro Plan</div><div style="font-size:12px;color:var(--muted);margin-top:2px">South Florida &middot; Unlimited quotes</div></div>
+          <div id="p-plan-pr" style="font-family:var(--serif);font-size:22px;color:var(--gold)">$199<span style="font-size:12px;font-family:var(--font);font-weight:500;color:var(--muted)">/mo</span></div>
+        </div>
+      </div>
+      <div class="card"><div class="eyebrow" style="margin-bottom:12px">Recent jobs</div>
+        <div style="display:flex;flex-direction:column">
+          <div class="row" style="padding:9px 0;border-bottom:1px solid var(--line)"><div><div style="font-size:14px;font-weight:600">Water heater replacement</div><div style="font-size:12px;color:var(--muted);margin-top:1px">Mar 14 &middot; Pembroke Pines</div></div><div style="color:var(--green);font-weight:700;font-size:14px">+$680</div></div>
+          <div class="row" style="padding:9px 0;border-bottom:1px solid var(--line)"><div><div style="font-size:14px;font-weight:600">Bathroom fixture install</div><div style="font-size:12px;color:var(--muted);margin-top:1px">Mar 11 &middot; Miramar</div></div><div style="color:var(--green);font-weight:700;font-size:14px">+$320</div></div>
+          <div class="row" style="padding:9px 0"><div><div style="font-size:14px;font-weight:600">Main line inspection</div><div style="font-size:12px;color:var(--muted);margin-top:1px">Mar 8 &middot; Hollywood</div></div><div style="color:var(--green);font-weight:700;font-size:14px">+$250</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CONTRACTOR QUOTE SUBMIT ════════════ -->
+<div class="screen" id="s-qsubmit">
+  <div class="topbar"><button class="back-btn" id="b-qs-bk">&#8592; Back</button><div style="font-weight:700;font-size:15px;color:var(--chalk)">Submit Quote</div><div class="topbar-spacer"></div></div>
+  <div class="scroll-body"><div class="page">
+    <div id="qs-jcard"></div>
+    <div><div class="eyebrow">Your quote</div>
+      <div class="card" style="display:flex;flex-direction:column;gap:14px">
+        <div class="field"><label class="label">Your price</label>
+          <div style="position:relative">
+            <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-weight:700;font-size:16px;color:var(--muted)">$</span>
+            <input type="number" id="q-price" placeholder="0" min="1" style="padding-left:27px;font-family:var(--serif);font-size:22px;letter-spacing:-.3px"/>
+          </div>
+        </div>
+        <div class="field"><label class="label">Earliest availability</label>
+          <select id="q-avail">
+            <option>Within 2 hours</option>
+            <option>Today &mdash; afternoon</option>
+            <option>Tomorrow &mdash; morning</option>
+            <option>Tomorrow &mdash; afternoon</option>
+            <option selected>Within 2&ndash;3 days</option>
+            <option>This week</option>
+          </select>
+        </div>
+        <div class="field"><label class="label">Note to customer <span style="font-weight:400;color:var(--muted2);text-transform:none;letter-spacing:0">(optional)</span></label>
+          <textarea id="q-note" placeholder="e.g. Licensed and insured. Price includes all parts and a 1-year labor warranty..." style="min-height:75px"></textarea>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-gold btn-full" id="b-send-q">Send Quote &rarr;</button>
+  </div></div>
+</div>
+
+<!-- ════════════ ABOUT ════════════ -->
+<div class="screen" id="s-about">
+  <div class="topbar"><button class="back-btn" id="b-about-bk">&#8592; Back</button><div class="logo-lockup logo-home"><div class="logo-gem">Q</div><div class="logo-name">Quo<span>to</span></div></div><div class="topbar-spacer"></div></div>
+  <div class="scroll-body"><div class="page">
+
+    <div style="padding:6px 0 4px">
+      <div class="eyebrow">How Quoto works</div>
+      <div class="display-title">The smarter way<br>to hire a pro.</div>
+      <p class="body-copy" style="margin-top:10px">Quoto eliminates the weeks-long back-and-forth of getting trade quotes. AI analyzes your job, contractors compete on price, and you book in minutes.</p>
+    </div>
+
+    <!-- Step by step -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif);font-size:18px;color:var(--gold)">1</div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px">Snap a photo &amp; describe the job</div><div class="body-copy" style="font-size:13px">Take a photo right from your phone or upload one. Add a quick description. No technical knowledge needed.</div></div>
+      </div>
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif);font-size:18px;color:var(--gold)">2</div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px">AI builds your job card instantly</div><div class="body-copy" style="font-size:13px">Our AI analyzes the photo and description to generate a detailed scope of work, exact tools and parts needed, estimated hours, and urgency level. Every contractor quotes from the same card &mdash; no surprises.</div></div>
+      </div>
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif);font-size:18px;color:var(--gold)">3</div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px">Verified contractors send quotes</div><div class="body-copy" style="font-size:13px">Licensed, vetted pros in your area receive the job card and submit their price, availability, and ETA &mdash; without needing a site visit first.</div></div>
+      </div>
+      <div class="card" style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--serif);font-size:18px;color:var(--gold)">4</div>
+        <div><div style="font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px">Pick the best quote &amp; book</div><div class="body-copy" style="font-size:13px">Compare price, timing, and ratings side by side. Book in one tap. A deposit is held securely &mdash; you only pay when the job is done.</div></div>
+      </div>
+    </div>
+
+    <!-- Why it's different -->
+    <div style="margin-top:4px">
+      <div class="eyebrow" style="margin-bottom:12px">Why Quoto beats the rest</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="card card-gold" style="display:flex;gap:12px;align-items:center">
+          <div style="font-size:22px">&#129504;</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--chalk)">AI-powered job scoping</div><div class="body-copy" style="font-size:12px;margin-top:2px">No other platform generates a detailed parts list, time estimate, and urgency rating before a contractor ever sees the job.</div></div>
+        </div>
+        <div class="card" style="display:flex;gap:12px;align-items:center">
+          <div style="font-size:22px">&#128184;</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--chalk)">Real competition, real savings</div><div class="body-copy" style="font-size:12px;margin-top:2px">Multiple contractors bid for your job. The average homeowner saves 20–40% compared to calling a single contractor.</div></div>
+        </div>
+        <div class="card" style="display:flex;gap:12px;align-items:center">
+          <div style="font-size:22px">&#9889;</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--chalk)">Hours, not weeks</div><div class="body-copy" style="font-size:12px;margin-top:2px">The average wait to collect 3 quotes the old way is 2–3 weeks. On Quoto it's under 2 hours.</div></div>
+        </div>
+        <div class="card" style="display:flex;gap:12px;align-items:center">
+          <div style="font-size:22px">&#128274;</div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--chalk)">Secure escrow payments</div><div class="body-copy" style="font-size:12px;margin-top:2px">Your deposit is held safely. Contractors only get paid after you confirm the job is complete to your satisfaction.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trades -->
+    <div>
+      <div class="eyebrow" style="margin-bottom:12px">Trades we cover</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="badge badge-gold">&#9889; Electrical</span>
+        <span class="badge badge-blue">&#128296; Plumbing</span>
+        <span class="badge badge-muted">&#10052; HVAC</span>
+        <span class="badge badge-muted">&#127807; Landscaping</span>
+        <span class="badge badge-muted">&#127912; Painting</span>
+        <span class="badge badge-muted">&#129683; Carpentry / Woodworking</span>
+        <span class="badge badge-muted">&#127968; Roofing</span>
+        <span class="badge badge-muted">&#128736; General Contracting</span>
+        <span class="badge badge-muted">&#129729; Pressure Washing</span>
+        <span class="badge badge-muted">&#128313; More coming soon</span>
+      </div>
+    </div>
+
+    <!-- For contractors -->
+    <div class="card card-gold" style="text-align:center;padding:22px">
+      <div style="font-size:28px;margin-bottom:10px">&#128296;</div>
+      <div style="font-family:var(--serif);font-size:20px;color:var(--chalk);margin-bottom:6px">Are you a contractor?</div>
+      <p class="body-copy" style="font-size:13px;margin-bottom:16px">Receive pre-scoped job leads with exact tools lists and labor estimates. No more wasted drive-outs just to quote. Plans from $99/month.</p>
+      <button class="btn btn-gold btn-full" id="b-about-pro">Join as a Pro &rarr;</button>
+    </div>
+
+    <button class="btn btn-gold btn-full" id="b-about-start">Get My Free Quotes &rarr;</button>
+    <div class="hint" style="margin-bottom:8px">Free for homeowners &middot; No credit card &middot; Takes 2 minutes</div>
+
+  </div></div>
+</div>
+
+<!-- API KEY MODAL -->
+<div class="modal-overlay hidden" id="api-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="eyebrow" style="margin-bottom:8px">One-time setup</div>
+    <div style="font-family:var(--serif);font-size:22px;color:var(--chalk);margin-bottom:8px">Enter your API key</div>
+    <p class="body-copy" style="margin-bottom:18px">To power the AI job analysis, you need a free Anthropic API key. Get yours at <strong style="color:var(--gold)">console.anthropic.com</strong> &rarr; API Keys. It starts with <strong style="color:var(--gold)">sk-ant-</strong></p>
+    <div class="field" style="margin-bottom:14px"><label class="label">Anthropic API key</label><input type="text" id="api-key-input" placeholder="sk-ant-..." style="font-family:monospace;font-size:12px;letter-spacing:.5px"/></div>
+    <div class="err" id="api-err" style="margin-bottom:12px">Please enter a valid API key starting with sk-</div>
+    <button class="btn btn-gold btn-full" id="b-save-key">Save &amp; Continue &rarr;</button>
+    <div class="hint" style="margin-top:10px">Your key is stored locally in your browser and never sent to our servers.</div>
+  </div>
+</div>
+
+</div><!-- /app -->
+<div class="toast" id="toast"></div>
+
+<script type="module">
+// ═══════════════ FIREBASE SETUP ═══════════════
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, updateDoc } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_tXxo9gYvJtIVvNXQpgiRkaZCWnkdAK4",
+  authDomain: "quoto-901d8.firebaseapp.com",
+  projectId: "quoto-901d8",
+  storageBucket: "quoto-901d8.firebasestorage.app",
+  messagingSenderId: "120089190041",
+  appId: "1:120089190041:web:cdd2a4e1410b433e2ae208"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+
+// ── Firebase helpers ──
+async function fbSaveUser(uid, data) {
+  try { await setDoc(doc(db, 'users', uid), data, {merge: true}); } catch(e) { console.error('fbSaveUser:', e); }
+}
+async function fbGetUser(uid) {
+  try { const d = await getDoc(doc(db, 'users', uid)); return d.exists() ? d.data() : null; } catch(e) { return null; }
+}
+async function fbSavePro(uid, data) {
+  try { await setDoc(doc(db, 'pros', uid), data, {merge: true}); } catch(e) { console.error('fbSavePro:', e); }
+}
+async function fbGetPro(uid) {
+  try { const d = await getDoc(doc(db, 'pros', uid)); return d.exists() ? d.data() : null; } catch(e) { return null; }
+}
+async function fbSaveJob(jobData) {
+  try { const ref = await addDoc(collection(db, 'jobs'), {...jobData, createdAt: serverTimestamp()}); return ref.id; } catch(e) { console.error('fbSaveJob:', e); return null; }
+}
+async function fbGetJobs(uid) {
+  try {
+    const q = query(collection(db, 'jobs'), where('userUid', '==', uid), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch(e) { return []; }
+}
+async function fbSaveQuote(quoteData) {
+  try { await addDoc(collection(db, 'quotes'), {...quoteData, createdAt: serverTimestamp()}); } catch(e) { console.error('fbSaveQuote:', e); }
+}
+async function fbGetQuotes(proUid) {
+  try {
+    const q = query(collection(db, 'quotes'), where('proUid', '==', proUid), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({id: d.id, ...d.data()}));
+  } catch(e) { return []; }
+}
+
+// ── Auth state listener — auto-login ──
+onAuthStateChanged(auth, async function(user) {
+  if (user) {
+    // Check if customer or pro
+    var proData = await fbGetPro(user.uid);
+    if (proData && !S.proUser) {
+      proData.init = ((proData.fn||'C')[0] + (proData.ln||'T')[0]).toUpperCase();
+      S.proQuotes = await fbGetQuotes(user.uid);
+      enterPortal(proData);
+      return;
+    }
+    var custData = await fbGetUser(user.uid);
+    if (custData && !S.custUser) {
+      S.custHistory = await fbGetJobs(user.uid);
+      enterCustomer(custData);
+    }
+  }
+});
+
+// ── Override auth functions to use Firebase ──
+window._fbReady = true;
+window._db = db;
+window._auth = auth;
+window._fbHelpers = { fbSaveUser, fbGetUser, fbSavePro, fbGetPro, fbSaveJob, fbGetJobs, fbSaveQuote, fbGetQuotes };
+
+
+// ═══════════════ STATE ═══════════════
+var S = {
+  jc: null,
+  custUser: null,
+  proUser: null,
+  proQuotes: [],
+  custHistory: [],
+  activeJob: null,
+  plan: 'pro',
+  apiKey: localStorage.getItem('quoto_key') || '',
+  pendingSubmit: null
+};
+
+// ── PERSISTENT STORAGE HELPERS ──
+function saveUsers() {
+  try { localStorage.setItem('quoto_users', JSON.stringify(window._users)); } catch(e){}
+}
+function loadUsers() {
+  try {
+    var u = localStorage.getItem('quoto_users');
+    return u ? JSON.parse(u) : {};
+  } catch(e) { return {}; }
+}
+function savePros() {
+  try { localStorage.setItem('quoto_pros', JSON.stringify(window._pros)); } catch(e){}
+}
+function loadPros() {
+  try {
+    var p = localStorage.getItem('quoto_pros');
+    return p ? JSON.parse(p) : {};
+  } catch(e) { return {}; }
+}
+function saveSession(type, data) {
+  try { localStorage.setItem('quoto_session_' + type, JSON.stringify(data)); } catch(e){}
+}
+function loadSession(type) {
+  try {
+    var s = localStorage.getItem('quoto_session_' + type);
+    return s ? JSON.parse(s) : null;
+  } catch(e) { return null; }
+}
+function clearSession(type) {
+  try { localStorage.removeItem('quoto_session_' + type); } catch(e){}
+}
+function saveCustHistory(em, hist) {
+  try { localStorage.setItem('quoto_hist_' + em, JSON.stringify(hist)); } catch(e){}
+}
+function loadCustHistory(em) {
+  try {
+    var h = localStorage.getItem('quoto_hist_' + em);
+    return h ? JSON.parse(h) : [];
+  } catch(e) { return []; }
+}
+function saveProQuotes(em, quotes) {
+  try { localStorage.setItem('quoto_pq_' + em, JSON.stringify(quotes)); } catch(e){}
+}
+function loadProQuotes(em) {
+  try {
+    var q = localStorage.getItem('quoto_pq_' + em);
+    return q ? JSON.parse(q) : [];
+  } catch(e) { return []; }
+}
+
+// Init user stores
+window._users = loadUsers();
+window._pros = loadPros();
+
+// Seed demo accounts if not present
+if (!window._users['home@quoto.com']) {
+  window._users['home@quoto.com'] = {fn:'Owen',ln:'Smith',ph:'(954) 555-0192',ad:'123 Coral Way',ci:'Pembroke Pines',zp:'33025',em:'home@quoto.com',pw:'home1234',guest:false};
+  saveUsers();
+}
+if (!window._pros['demo@quoto.com']) {
+  window._pros['demo@quoto.com'] = {fn:'Mike',ln:'Johnson',biz:'Johnson Plumbing LLC',plan:'pro',em:'demo@quoto.com',pw:'demo1234',ph:'(954) 867-5309'};
+  savePros();
+}
+
+// Live user stores — backed by localStorage (set after _users/_pros init below)
+var CUST_DEMO = null; // unused — we use window._users directly
+var PRO_DEMO = null;  // unused — we use window._pros directly
+var CODES = ['QUOTO2024','DEMO2024','JADEN2024','BLB2024','QUOTO','DEMO'];
+var PLAN_PRICE = {starter:'$99',pro:'$199',elite:'$299'};
+var PLAN_NAME = {starter:'Starter Plan',pro:'Pro Plan',elite:'Elite Plan'};
+
+var FEED_JOBS = [
+  {id:'j1',trade:'Plumbing',isNew:true,posted:'Just now',
+   title:'Kitchen sink drain leak + cabinet water damage',
+   loc:'Pembroke Pines, FL 33025',
+   urgency:'High',ur:'Active water leak causing ongoing structural damage to cabinetry and flooring',
+   hrs:'2\u20133',range:'$200\u2013$380',
+   scope:'Diagnose and repair leaking kitchen sink drain. Remove and replace corroded P-trap and drain basket. Inspect all supply lines for secondary leaks. Treat water-damaged cabinet floor with antimicrobial sealant. Restore full drainage and pressure test for 10 minutes.',
+   tools:['Ridgid 1\u00bd\u2033 PVC P-trap with slip-joint nuts','Danco all-in-one drain basket with rubber gasket','SharkBite \u00bd\u2033 push-fit 90\u00b0 elbow \xd72','Oatey plumber\'s putty 14oz','Teflon tape \u00bd\u2033 (2 rolls)','Channel-Lock 10\u2033 slip-joint pliers','Ridgid basin wrench','5-gal bucket + microfiber rags','Boric acid mold treatment spray','Flashlight + inspection mirror']},
+  {id:'j2',trade:'Electrical',isNew:true,posted:'24 min ago',
+   title:'200A main panel upgrade \u2014 permit required',
+   loc:'Miramar, FL 33027',
+   urgency:'Medium',ur:'100A service insufficient for home additions \u2014 overloaded but no immediate hazard',
+   hrs:'5\u20137',range:'$1,400\u2013$2,400',
+   scope:'Pull Broward County permit and replace existing 100A panel with Square D QO 40-space 200A load center. Re-terminate all branch circuits with correct torque per NEC 110.14. Install new main shutoff, ground rod, and update weather head. Coordinate FPL utility upgrade and schedule final inspection.',
+   tools:['Square D QO140L200PG 200A 40-space load center','200A main breaker QOM2200VH','2\u2033 rigid galvanized conduit \xd7 10ft','2/0 AWG service entrance cable 10ft','5/8\u2033 \xd7 8ft copper ground rod + acorn clamp','Klein 11-in-1 wire stripper/crimper','Ideal torque screwdriver 15\u2013120 in-lb','Fluke 117 true RMS multimeter','1/2\u20132\u2033 knockout punch set','Arc flash Class 2 gloves + face shield']},
+  {id:'j3',trade:'HVAC',isNew:false,posted:'43 min ago',
+   title:'AC not cooling \u2014 refrigerant leak suspected',
+   loc:'Hollywood, FL 33020',
+   urgency:'High',ur:'No cooling in South Florida heat \u2014 safety concern especially for elderly or children',
+   hrs:'1.5\u20133',range:'$180\u2013$520',
+   scope:'Full diagnostic on cooling failure. Check refrigerant charge with manifold gauges. Perform electronic leak detection on evaporator coil, lineset, and Schrader valves. Repair confirmed leak location. Recharge with R-410A to manufacturer spec. Verify TXV superheat, blower motor amp draw, and delta-T across coil.',
+   tools:['4-valve manifold gauge set R-410A (Yellow Jacket 49967)','Inficon D-TEK Select electronic leak detector','R-410A refrigerant cylinder (recover/recharge as needed)','Nitrogen tank + two-stage regulator for pressure test','Schrader valve cores 4-pack + core removal tool','Coil fin straightening comb (10 fins/in)','Rectorseal Calci-Free condensate flush tabs','Klein amp clamp + Fluke 116 HVAC multimeter','Duct foil tape 2.5\u2033 + mesh foil tape','Nitrile gloves + safety glasses']},
+  {id:'j4',trade:'Plumbing',isNew:false,posted:'1 hr 15 min ago',
+   title:'40-gal gas water heater replacement',
+   loc:'Davie, FL 33325',
+   urgency:'Medium',ur:'Unit 12 years old \u2014 anode rod exhausted, sediment buildup reducing efficiency',
+   hrs:'2.5\u20134',range:'$700\u2013$1,050',
+   scope:'Shut off gas and water supply. Drain and disconnect existing 40-gallon unit. Install new A.O. Smith ProMax gas water heater with new flex connectors, ball shutoffs, and thermal expansion tank per FL Building Code 606.5. Set T&P relief valve, test all connections for gas leaks, and verify 120\u00b0F output temperature.',
+   tools:['A.O. Smith ProMax 40-gal natural gas (GPVH-40)','Watts ET-15-C thermal expansion tank','3/4\u2033 full-port ball valves \xd72 (Watts B-6000)','18\u2033 stainless flex connectors \u2014 gas + water (2 sets)','Watts 100XL T&P relief valve 3/4\u2033','CSST flexible gas line 18\u2033','Rectorseal No.5 pipe dope + Teflon tape','18\u2033 pipe wrench + Channel-Lock 12\u2033','20ft garden hose for drain/flush','Combustible gas leak detector pen']}
+];
+
+// ═══════════════ NAVIGATION ═══════════════
+function go(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) { el.classList.add('active'); el.scrollTop = 0; }
+}
+
+// ═══════════════ PHOTO SYSTEM ═══════════════
+function setFileToInput(file) {
+  try {
+    var dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('photo-file').files = dt.files;
+  } catch(e) { console.log('DataTransfer not supported:', e); }
+}
+
+function showPreview(src) {
+  var img = document.getElementById('pz-img');
+  var pz = document.getElementById('pzone');
+  var inner = document.getElementById('pz-inner');
+  var rm = document.getElementById('pz-rm');
+  img.style.display = 'block';
+  img.src = src;
+  inner.style.display = 'none';
+  rm.style.display = 'block';
+  pz.classList.add('filled');
+  pz.style.minHeight = '0';
+  pz.style.padding = '0';
+}
+
+function previewFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  var reader = new FileReader();
+  reader.onload = function(e) { showPreview(e.target.result); };
+  reader.readAsDataURL(file);
+}
+
+function clearPhoto() {
+  var img = document.getElementById('pz-img');
+  var pz = document.getElementById('pzone');
+  var inner = document.getElementById('pz-inner');
+  var rm = document.getElementById('pz-rm');
+  img.style.display = 'none';
+  img.src = '';
+  inner.style.display = '';
+  rm.style.display = 'none';
+  pz.classList.remove('filled');
+  pz.style.minHeight = '';
+  pz.style.padding = '';
+  document.getElementById('photo-file').value = '';
+}
+
+function setupDragDrop() {
+  var pz = document.getElementById('pzone');
+
+  function preventDefault(e) { e.preventDefault(); e.stopPropagation(); }
+
+  pz.addEventListener('dragenter', function(e) { preventDefault(e); pz.classList.add('over'); });
+  pz.addEventListener('dragover', function(e) { preventDefault(e); pz.classList.add('over'); });
+  pz.addEventListener('dragleave', function(e) {
+    preventDefault(e);
+    if (!pz.contains(e.relatedTarget)) pz.classList.remove('over');
+  });
+  pz.addEventListener('drop', function(e) {
+    preventDefault(e);
+    pz.classList.remove('over');
+
+    // Method 1: File drop (from file system)
+    var files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      var file = files[0];
+      if (file.type.startsWith('image/')) {
+        setFileToInput(file);
+        previewFile(file);
+        toast('Photo added', 'success');
+        return;
+      }
+    }
+
+    // Method 2: Image element drag from browser (Google Images, websites)
+    var imgSrc = null;
+
+    // Try to get image src from HTML data
+    var htmlData = e.dataTransfer.getData('text/html');
+    if (htmlData) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(htmlData, 'text/html');
+      var imgEl = doc.querySelector('img');
+      if (imgEl && imgEl.src) imgSrc = imgEl.src;
+    }
+
+    // Fallback: try plain text as URL
+    if (!imgSrc) {
+      var textData = e.dataTransfer.getData('text/plain');
+      if (textData && /^https?:\/\//i.test(textData)) imgSrc = textData;
+    }
+
+    // Fallback: try URL data type
+    if (!imgSrc) {
+      var urlData = e.dataTransfer.getData('text/uri-list');
+      if (urlData && /^https?:\/\//i.test(urlData.split('\n')[0])) {
+        imgSrc = urlData.split('\n')[0].trim();
+      }
+    }
+
+    if (imgSrc) {
+      toast('Loading image...', '');
+      // Try to fetch the image (works if CORS allows it)
+      fetch(imgSrc)
+        .then(function(r) {
+          if (!r.ok) throw new Error('Fetch failed');
+          return r.blob();
+        })
+        .then(function(blob) {
+          var file = new File([blob], 'photo.jpg', {type: blob.type || 'image/jpeg'});
+          setFileToInput(file);
+          previewFile(file);
+          toast('Photo added', 'success');
+        })
+        .catch(function() {
+          // CORS blocked — show URL preview directly (AI won't read it but user sees it)
+          showPreview(imgSrc);
+          // Clear file input since we couldn't fetch
+          document.getElementById('photo-file').value = '';
+          toast('Preview only \u2014 for AI analysis, save & upload the image', 'error');
+        });
+      return;
+    }
+
+    toast('Drop an image file or drag from a browser', 'error');
+  });
+}
+
+// ═══════════════ STEPS ANIMATION ═══════════════
+function animSteps() {
+  var labels = ['Reading your description','Identifying scope of work','Compiling tools & materials','Calculating hours & cost','Notifying local contractors'];
+  for (var n = 1; n <= 5; n++) {
+    var el = document.getElementById('ls' + n);
+    if (el) { el.className = 'step'; el.innerHTML = '<div class="sdot"></div>' + labels[n-1]; }
+  }
+  for (var i = 0; i < 5; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        if (idx > 0) {
+          var prev = document.getElementById('ls' + idx);
+          if (prev) prev.className = 'step done';
+        }
+        var cur = document.getElementById('ls' + (idx+1));
+        if (cur) cur.className = 'step live';
+      }, idx * 900);
+    })(i);
+  }
+}
+
+// ═══════════════ SUBMIT JOB ═══════════════
+function submitJob() {
+  var trade = document.getElementById('j-trade').value;
+  var desc = document.getElementById('j-desc').value.trim();
+  var zip = document.getElementById('j-zip').value.trim();
+
+  if (!trade) { toast('Please select a trade', 'error'); return; }
+  if (desc.length < 10) { toast('Please describe the problem in more detail', 'error'); return; }
+
+  var key = S.apiKey || localStorage.getItem('quoto_key') || '';
+  if (!key) {
+    S.pendingSubmit = {trade: trade, desc: desc, zip: zip};
+    document.getElementById('api-modal').classList.remove('hidden');
+    return;
+  }
+
+  runAI(trade, desc, zip, key);
+}
+
+function runAI(trade, desc, zip, key) {
+  go('s-ana');
+  animSteps();
+
+  var pi = document.getElementById('photo-file');
+  var hasPhoto = pi.files && pi.files.length > 0 && pi.files[0];
+
+  var prompt = 'You are a licensed master ' + trade + ' contractor with 20+ years in South Florida. A homeowner needs a quote. Generate a precise AI job card.\n\n'
+    + 'Trade: ' + trade + '\n'
+    + 'Location: ' + (zip || 'South Florida') + '\n'
+    + 'Customer description: "' + desc + '"\n'
+    + (hasPhoto ? '\nPHOTO PROVIDED: Analyze it carefully. Identify brands, model numbers, pipe sizes, wire gauges, fixture types, visible damage extent, part numbers. Use visual details for the tools list.\n' : '')
+    + '\nTOOLS & MATERIALS RULES (CRITICAL):\n'
+    + '- Every item must be orderable from Ferguson, Home Depot Pro, or a local supplier\n'
+    + '- Include exact sizes, specs, amperage, diameters, BTU ratings\n'
+    + '- Use real brand names: SharkBite, Oatey, Ridgid, Square D, Watts, A.O. Smith, Honeywell, Rheem, Carrier, Danco, Rectorseal, Klein, Fluke, Yellow Jacket, etc.\n'
+    + '- Include consumables: Teflon tape size, pipe dope brand, wire nuts AWG range, etc.\n'
+    + '- Include specific tools: NOT "wrench" but "18-inch Ridgid pipe wrench"\n'
+    + '- Include PPE/safety where required by code\n'
+    + '- MINIMUM 8 items, MAXIMUM 12. ZERO generic entries\n\n'
+    + 'Return ONLY raw JSON, absolutely no markdown or backticks:\n'
+    + '{"jobTitle":"5-8 word title","trade":"' + trade + '","scope":"3 sentences covering: what is wrong, exact work required, how completion will be verified","tools":["SPECIFIC Brand+Part+Size/Spec"],"estimatedHours":"X-Y hours","urgency":"High|Medium|Low","urgencyReason":"Name the specific risk","estimatedRange":"$X-$Y","specialNotes":"FL code, permits, access, things to verify on arrival"}';
+
+  function doFetch(messages) {
+    fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 1800, messages: messages})
+    })
+    .then(function(res) {
+      if (!res.ok) {
+        return res.text().then(function(t) {
+          if (res.status === 401) {
+            localStorage.removeItem('quoto_key');
+            S.apiKey = '';
+            throw new Error('Invalid API key \u2014 re-enter it to try again');
+          }
+          throw new Error('API ' + res.status);
+        });
+      }
+      return res.json();
+    })
+    .then(function(d) {
+      if (!d.content || !d.content[0]) throw new Error('Empty response');
+      var raw = d.content[0].text.trim().replace(/```json|```/g,'').trim();
+      // Extract JSON if there's any preamble
+      var jsonStart = raw.indexOf('{');
+      if (jsonStart > 0) raw = raw.slice(jsonStart);
+      var jsonEnd = raw.lastIndexOf('}');
+      if (jsonEnd < raw.length - 1) raw = raw.slice(0, jsonEnd + 1);
+      S.jc = JSON.parse(raw);
+      S.jc.zip = zip || '33025';
+      renderJC('jcard-display', S.jc);
+      go('s-jcard');
+    })
+    .catch(function(err) {
+      console.error('AI Error:', err);
+      S.jc = {
+        jobTitle: trade + ' Service Request',
+        trade: trade, zip: zip || '33025',
+        scope: desc,
+        tools: ['AI analysis failed \u2014 Error: ' + err.message],
+        estimatedHours: 'TBD', urgency: 'Medium',
+        urgencyReason: 'Please resubmit',
+        estimatedRange: 'TBD', specialNotes: err.message
+      };
+      renderJC('jcard-display', S.jc);
+      go('s-jcard');
+      toast(err.message, 'error');
+    });
+  }
+
+  if (hasPhoto) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var b64 = e.target.result.split(',')[1];
+      var mtype = pi.files[0].type || 'image/jpeg';
+      doFetch([{role:'user', content:[
+        {type:'image', source:{type:'base64', media_type:mtype, data:b64}},
+        {type:'text', text:prompt}
+      ]}]);
+    };
+    reader.onerror = function() { doFetch([{role:'user', content:prompt}]); };
+    reader.readAsDataURL(pi.files[0]);
+  } else {
+    doFetch([{role:'user', content:prompt}]);
+  }
+}
+
+// ═══════════════ RENDER JOB CARD ═══════════════
+function urgBadge(u) {
+  return {High:'badge-red', Medium:'badge-amber', Low:'badge-green'}[u] || 'badge-amber';
+}
+function tradeBadge(t) {
+  return {Plumbing:'badge-blue', Electrical:'badge-gold', HVAC:'badge-green', Carpentry:'badge-muted', Painting:'badge-muted', Landscaping:'badge-green', Roofing:'badge-muted'}[t] || 'badge-muted';
+}
+
+function renderJC(targetId, d) {
+  var tools = d.tools || [];
+  var toolsHtml = tools.map(function(t){ return '<div class="tool-chip">' + escH(t) + '</div>'; }).join('');
+  var hrs = d.estimatedHours || d.hrs || 'TBD';
+  var range = d.estimatedRange || d.range || 'TBD';
+  var title = d.jobTitle || d.title || 'Service Request';
+  var scope = d.scope || '';
+  var urgency = d.urgency || 'Medium';
+  var ur = d.urgencyReason || d.ur || '';
+  var notes = d.specialNotes || '';
+
+  var html = '<div class="jcard">'
+    + '<div class="jcard-head"><h3>' + escH(title) + '</h3><span class="badge ' + tradeBadge(d.trade) + '">' + escH(d.trade) + '</span></div>'
+    + '<div class="jcard-body">'
+    + '<div class="jrow"><div class="jrow-icon">&#128203;</div><div><div class="jrow-label">Scope of work</div><div class="jrow-value">' + escH(scope) + '</div></div></div>'
+    + '<div class="jrow"><div class="jrow-icon">&#128297;</div><div><div class="jrow-label">Tools &amp; materials needed</div><div class="tools-grid">' + toolsHtml + '</div></div></div>'
+    + '<div class="jrow"><div class="jrow-icon">&#9203;</div><div><div class="jrow-label">Estimated labor time</div><div class="jrow-value">' + escH(hrs) + '</div></div></div>'
+    + '<div class="jrow"><div class="jrow-icon">&#128181;</div><div><div class="jrow-label">Market rate estimate</div><div class="jrow-value">' + escH(range) + '</div></div></div>'
+    + '<div class="jrow"><div class="jrow-icon">&#128680;</div><div><div class="jrow-label">Urgency</div><span class="badge ' + urgBadge(urgency) + '">' + escH(urgency) + ' \u2014 ' + escH(ur) + '</span></div></div>'
+    + (notes ? '<div class="jrow"><div class="jrow-icon">&#128221;</div><div><div class="jrow-label">Contractor notes</div><div class="jrow-value">' + escH(notes) + '</div></div></div>' : '')
+    + '</div></div>';
+
+  var el = document.getElementById(targetId);
+  if (el) el.innerHTML = html;
+}
+
+function escH(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════ QUOTES ═══════════════
+function showQuotes() {
+  if (!S.jc) return;
+  var lo = 150, hi = 400;
+  try {
+    var m = (S.jc.estimatedRange || '').match(/\$(\d+)[^\d]+\$?(\d+)/);
+    if (m) { lo = +m[1]; hi = +m[2]; }
+  } catch(e) {}
+  var sp = hi - lo;
+  var prices = [
+    Math.round((lo + sp * 0.10) / 5) * 5,
+    Math.round((lo + sp * 0.42) / 5) * 5,
+    Math.round((lo + sp * 0.76) / 5) * 5
+  ].sort(function(a,b){return a-b;});
+
+  var contractors = [
+    {n:'ProFix South Florida', r:'4.9', rev:214, av:'Within 2 hours', ph:'(954) 443-7821'},
+    {n:'Rapid Response Pros', r:'4.8', rev:189, av:'Today — afternoon', ph:'(954) 882-3304'},
+    {n:'All-Star Trades LLC', r:'4.7', rev:97, av:'Tomorrow — morning', ph:'(954) 561-9047'}
+  ];
+  var notes = [
+    'Licensed, bonded & insured. ' + (S.jc.estimatedHours||'') + ' est. All parts + labor warranty included.',
+    '10+ years in ' + (S.jc.trade||'').toLowerCase() + '. Can mobilize ' + contractors[1].av.toLowerCase() + '. Firm price.',
+    'Full diagnostic on arrival. All work comes with written 1-year guarantee. Clean-up included.'
+  ];
+
+  var list = document.getElementById('quotes-list');
+  list.innerHTML = '';
+
+  contractors.forEach(function(c, i) {
+    var div = document.createElement('div');
+    div.className = 'qcard' + (i === 0 ? ' winner' : '');
+    var inner = (i===0 ? '<div class="winner-tag">BEST VALUE</div>' : '')
+      + '<div class="row" style="margin-bottom:12px">'
+      + '<div><div style="font-size:15px;font-weight:700;color:var(--chalk)">' + escH(c.n) + '</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-top:2px">&#9733; ' + c.r + ' &middot; ' + c.rev + ' reviews &middot; Verified</div></div>'
+      + '<div style="text-align:right"><div class="qprice">$' + prices[i] + '</div><div style="font-size:11px;color:var(--muted2);margin-top:2px">all-in</div></div>'
+      + '</div>'
+      + '<div class="chip-row" style="margin-bottom:10px">'
+      + '<div class="qchip">&#128197; ' + escH(c.av) + '</div>'
+      + '<div class="qchip">&#9203; ' + escH(S.jc.estimatedHours||S.jc.hrs||'') + '</div>'
+      + '<div class="qchip">&#128737; Guaranteed</div>'
+      + '</div>'
+      + '<div style="font-size:13px;color:var(--muted);line-height:1.6;padding-top:10px;border-top:1px solid var(--line);margin-bottom:12px">' + escH(notes[i]) + '</div>';
+    div.innerHTML = inner;
+
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-gold btn-full';
+    btn.textContent = 'Book ' + c.n.split(' ')[0] + ' \u2014 $' + prices[i];
+    (function(idx, price, name, avail){
+      btn.addEventListener('click', function(){ bookJob(price, name, avail, c.ph); });
+    })(i, prices[i], c.n, c.av);
+    div.appendChild(btn);
+    list.appendChild(div);
+  });
+
+  document.getElementById('waiting-block').style.display = 'none';
+  document.getElementById('quotes-block').style.display = 'block';
+  toast('3 quotes received! Compare below &#8595;', 'success');
+}
+
+function bookJob(price, name, avail, phone) {
+  var dep = Math.round(price * 0.2);
+  document.getElementById('booked-msg').textContent = name + ' confirmed. Arriving ' + avail.toLowerCase() + '. $' + dep + ' deposit held securely.';
+  var phoneLink = phone ? '<a href="tel:' + phone + '" style="display:flex;align-items:center;gap:8px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:12px 14px;margin-top:12px;text-decoration:none"><div style="width:34px;height:34px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">&#128222;</div><div><div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px;text-transform:uppercase">Call your contractor</div><div style="font-size:17px;font-weight:700;color:var(--chalk);margin-top:1px">' + escH(phone) + '</div></div><div style="margin-left:auto;color:var(--green);font-size:18px">&#8250;</div></a>' : '';
+  document.getElementById('booked-detail').innerHTML = '<div class="row" style="margin-bottom:12px">'
+    + '<div style="font-weight:700;font-size:15px;color:var(--chalk)">' + escH(name) + '</div>'
+    + '<div style="font-family:var(--serif);font-size:24px;color:var(--gold)">$' + price + '</div>'
+    + '</div><div style="display:flex;flex-direction:column;gap:8px">'
+    + '<div class="qchip">&#128197; Arriving: ' + escH(avail) + '</div>'
+    + '<div class="qchip">&#128274; Deposit: $' + dep + ' in escrow</div>'
+    + '<div class="qchip">&#10003; ' + escH(S.jc ? (S.jc.jobTitle||'') : '') + '</div>'
+    + '</div>' + phoneLink;
+
+  var jobEntry = {title: S.jc ? (S.jc.jobTitle||'Job') : 'Job', contractor: name, price: price, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})};
+  S.custHistory.push(jobEntry);
+  if (S.custUser && S.custUser.em) saveCustHistory(S.custUser.em, S.custHistory);
+  if (auth.currentUser && S.jc) {
+    fbSaveJob({...jobEntry, userUid: auth.currentUser.uid, jobCard: S.jc}).catch(function(){});
+  }
+  updateHistory();
+  go('s-booked');
+}
+
+function resetJob() {
+  clearPhoto();
+  document.getElementById('j-trade').value = '';
+  document.getElementById('j-desc').value = '';
+  S.jc = null;
+  document.getElementById('waiting-block').style.display = '';
+  document.getElementById('quotes-block').style.display = 'none';
+  go('s-job');
+}
+
+// ═══════════════ CUSTOMER AUTH ═══════════════
+function enterCustomer(u) {
+  S.custUser = u;
+  if (u.em) S.custHistory = loadCustHistory(u.em);
+  var init = ((u.fn||'G')[0] + (u.ln||'G')[0]).toUpperCase();
+  if (u.zp) document.getElementById('j-zip').value = u.zp;
+  var av = document.getElementById('job-avatar');
+  if (av) av.textContent = init;
+  document.getElementById('job-hint').textContent = u.guest ? 'Free for homeowners \u00b7 Always' : 'Logged in as ' + u.fn + ' \u00b7 Free for homeowners';
+  document.getElementById('prof-av').textContent = init;
+  document.getElementById('prof-nm').textContent = (u.fn + ' ' + u.ln).trim() || 'Guest';
+  document.getElementById('prof-em').textContent = u.em || 'Guest session';
+  document.getElementById('prof-ph').textContent = u.ph || '\u2014';
+  document.getElementById('prof-ad').textContent = u.ad ? u.ad + (u.ci ? ', ' + u.ci : '') : '\u2014';
+  document.getElementById('prof-zp').textContent = u.zp || '\u2014';
+  updateHistory();
+  go('s-job');
+  toast('Welcome' + (u.guest ? '' : ', ' + u.fn) + '!', 'success');
+}
+
+function updateHistory() {
+  var el = document.getElementById('prof-hist');
+  if (!el) return;
+  if (!S.custHistory.length) { el.textContent = 'No jobs submitted yet.'; return; }
+  el.innerHTML = S.custHistory.map(function(h){
+    return '<div class="row" style="padding:9px 0;border-bottom:1px solid var(--line)">'
+      + '<div><div style="font-size:13px;font-weight:600;color:var(--chalk)">' + escH(h.title) + '</div>'
+      + '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + h.date + ' \u00b7 ' + escH(h.contractor) + '</div></div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--green)">$' + h.price + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+// ═══════════════ CONTRACTOR AUTH ═══════════════
+function selectPlan(p) {
+  S.plan = p;
+  ['s','p','e'].forEach(function(x){ document.getElementById('plan-'+x).classList.remove('sel'); });
+  var map = {starter:'s', pro:'p', elite:'e'};
+  if (map[p]) document.getElementById('plan-'+map[p]).classList.add('sel');
+}
+
+function enterPortal(u) {
+  S.proUser = u;
+  document.getElementById('p-av').textContent = u.init || 'CT';
+  document.getElementById('p-plan-nm').textContent = PLAN_NAME[u.plan] || 'Pro Plan';
+  document.getElementById('p-plan-pr').innerHTML = (PLAN_PRICE[u.plan]||'$199') + '<span style="font-size:12px;font-family:var(--font);font-weight:500;color:var(--muted)">/mo</span>';
+  renderFeed();
+  renderMyQuotes();
+  showTab('feed');
+  go('s-portal');
+  toast('Welcome back, ' + (u.fn||u.name||'').split(' ')[0] + '!', 'success');
+}
+
+// ═══════════════ PORTAL TABS ═══════════════
+function showTab(t) {
+  ['feed','quotes','earn'].forEach(function(x){
+    var c = document.getElementById('pt-'+x);
+    var tb = document.getElementById('ptab-'+x);
+    if (c) { c.style.display = x===t ? 'block' : 'none'; }
+    if (tb) { tb.classList.toggle('on', x===t); }
+  });
+}
+
+function renderFeed() {
+  var c = document.getElementById('feed-list');
+  if (!c) return;
+  c.innerHTML = '';
+  FEED_JOBS.forEach(function(job) {
+    var div = document.createElement('div');
+    div.className = 'fitem';
+    div.innerHTML = '<div class="fitem-top">'
+      + '<div style="flex:1"><div class="fitem-title">' + escH(job.title) + '</div><div class="fitem-loc">&#128205; ' + escH(job.loc) + '</div></div>'
+      + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">'
+      + (job.isNew ? '<div class="new-badge"><div class="new-dot"></div>NEW</div>' : '')
+      + '<span class="badge ' + tradeBadge(job.trade) + '">' + escH(job.trade) + '</span>'
+      + '</div></div>'
+      + '<div class="fitem-body">'
+      + '<div class="chip-row" style="margin-bottom:10px">'
+      + '<div class="qchip">&#9203; ' + escH(job.hrs) + ' hrs</div>'
+      + '<span class="badge ' + urgBadge(job.urgency) + '">' + escH(job.urgency) + '</span>'
+      + '<div class="qchip">&#128181; ' + escH(job.range) + '</div>'
+      + '<div class="qchip" style="color:var(--muted2)">' + escH(job.posted) + '</div>'
+      + '</div>'
+      + '</div>';
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-gold btn-sm btn-full';
+    btn.textContent = 'View Full Job & Submit Quote \u2192';
+    (function(j){ btn.addEventListener('click', function(){ openQuoteSubmit(j); }); })(job);
+    div.querySelector('.fitem-body').appendChild(btn);
+    c.appendChild(div);
+  });
+}
+
+function openQuoteSubmit(job) {
+  S.activeJob = job;
+  renderJC('qs-jcard', job);
+  document.getElementById('q-price').value = '';
+  document.getElementById('q-avail').selectedIndex = 0;
+  document.getElementById('q-note').value = '';
+  go('s-qsubmit');
+}
+
+function renderMyQuotes() {
+  var c = document.getElementById('my-quotes-list');
+  if (!c) return;
+  if (!S.proQuotes.length) {
+    c.innerHTML = '<div style="text-align:center;padding:36px 20px;color:var(--muted2);font-size:14px">No quotes submitted yet.<br>Head to Job Feed to get started.</div>';
+    return;
+  }
+  c.innerHTML = S.proQuotes.map(function(q){
+    return '<div class="card"><div class="row">'
+      + '<div><div style="font-weight:700;font-size:14px;color:var(--chalk)">' + escH(q.job) + '</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-top:2px">&#128197; ' + escH(q.avail) + '</div></div>'
+      + '<div style="text-align:right">'
+      + '<div style="font-family:var(--serif);font-size:22px;color:var(--gold)">$' + q.price + '</div>'
+      + '<span class="badge ' + (q.status==='Won'?'badge-green':'badge-amber') + '" style="margin-top:3px">' + escH(q.status) + '</span>'
+      + '</div></div></div>';
+  }).join('');
+}
+
+// ═══════════════ API KEY MODAL ═══════════════
+function saveApiKey() {
+  var key = document.getElementById('api-key-input').value.trim();
+  var err = document.getElementById('api-err');
+  if (!key || !key.startsWith('sk-')) { err.classList.add('show'); return; }
+  err.classList.remove('show');
+  localStorage.setItem('quoto_key', key);
+  S.apiKey = key;
+  document.getElementById('api-modal').classList.add('hidden');
+  if (S.pendingSubmit) {
+    var p = S.pendingSubmit;
+    S.pendingSubmit = null;
+    runAI(p.trade, p.desc, p.zip, key);
+  }
+}
+
+// ═══════════════ TOAST ═══════════════
+var toastTimer = null;
+function toast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.className = 'toast'; }, 3000);
+}
+
+// ═══════════════ WIRE UP ALL BUTTONS ═══════════════
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Landing
+  document.getElementById('btn-home').addEventListener('click', function(){ go('s-cg'); });
+  document.getElementById('btn-pro').addEventListener('click', function(){ go('s-gate'); });
+
+  // Customer gate
+  document.getElementById('b-cg-bk').addEventListener('click', function(){ go('s-land'); });
+  document.getElementById('b-cg-su').addEventListener('click', function(){ go('s-cs'); });
+  document.getElementById('b-cg-li').addEventListener('click', function(){ go('s-cl'); });
+  document.getElementById('b-cg-guest').addEventListener('click', function(){
+    enterCustomer({fn:'Guest',ln:'',ph:'',ad:'',ci:'',zp:'',em:'',guest:true});
+  });
+
+  // Customer login
+  document.getElementById('b-cl-bk').addEventListener('click', function(){ go('s-cg'); });
+  document.getElementById('b-cl-go').addEventListener('click', function(){
+    var em = document.getElementById('cl-em').value.trim().toLowerCase();
+    var pw = document.getElementById('cl-pw').value;
+    var err = document.getElementById('cl-err');
+    signInWithEmailAndPassword(auth, em, pw)
+      .then(async function(cred) {
+        err.classList.remove('show');
+        var userData = await fbGetUser(cred.user.uid);
+        if (userData) {
+          S.custHistory = await fbGetJobs(cred.user.uid);
+          enterCustomer(userData);
+        } else {
+          var fallback = window._users[em] || {fn:'User',ln:'',em:em,ph:'',ad:'',ci:'',zp:'',guest:false};
+          enterCustomer(fallback);
+        }
+      })
+      .catch(function() { err.classList.add('show'); });
+  });
+  document.getElementById('b-cl-2su').addEventListener('click', function(){ go('s-cs'); });
+
+  // Customer signup
+  document.getElementById('b-cs-bk').addEventListener('click', function(){ go('s-cg'); });
+  document.getElementById('b-cs-go').addEventListener('click', function(){
+    var fn = document.getElementById('cs-fn').value.trim();
+    var ln = document.getElementById('cs-ln').value.trim();
+    var em = document.getElementById('cs-em').value.trim().toLowerCase();
+    var ph = document.getElementById('cs-ph').value.trim();
+    var ad = document.getElementById('cs-ad').value.trim();
+    var ci = document.getElementById('cs-ci').value.trim();
+    var zp = document.getElementById('cs-zp').value.trim();
+    var pw = document.getElementById('cs-pw').value;
+    var err = document.getElementById('cs-err');
+    if (!fn||!ln||!em||!ph||!ad||!zp||!pw) { err.classList.add('show'); return; }
+    if (pw.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('show'); return; }
+    if (window._users[em]) { err.textContent = 'An account with that email already exists.'; err.classList.add('show'); return; }
+    err.classList.remove('show');
+    var newUser = {fn:fn,ln:ln,em:em,ph:ph,ad:ad,ci:ci,zp:zp,guest:false};
+    createUserWithEmailAndPassword(auth, em, pw)
+      .then(async function(cred) {
+        newUser.uid = cred.user.uid;
+        await fbSaveUser(cred.user.uid, newUser);
+        window._users[em] = newUser;
+        saveUsers();
+        enterCustomer(newUser);
+        toast('Account created!', 'success');
+      })
+      .catch(function(err) {
+        var e = document.getElementById('cs-err');
+        if (err.code === 'auth/email-already-in-use') { e.textContent = 'An account with that email already exists.'; }
+        else if (err.code === 'auth/weak-password') { e.textContent = 'Password must be at least 6 characters.'; }
+        else { e.textContent = 'Error: ' + err.message; }
+        e.classList.add('show');
+      });
+  });
+
+  // Submit job
+  document.getElementById('b-job-bk').addEventListener('click', function(){ go('s-cg'); });
+  document.getElementById('job-avatar').addEventListener('click', function(){ go('s-prof'); });
+  document.getElementById('btn-submit-job').addEventListener('click', submitJob);
+
+  // Photo zone click to open file picker
+  document.getElementById('pzone').addEventListener('click', function(e){
+    if (e.target === document.getElementById('pz-rm') || e.target === document.getElementById('pz-img')) return;
+    document.getElementById('photo-file').click();
+  });
+  document.getElementById('photo-file').addEventListener('change', function(){
+    if (this.files && this.files[0]) previewFile(this.files[0]);
+  });
+  document.getElementById('pz-rm').addEventListener('click', function(e){ e.stopPropagation(); clearPhoto(); });
+
+  // Camera button
+  document.getElementById('btn-cam').addEventListener('click', function(e){
+    e.stopPropagation();
+    document.getElementById('camera-file').click();
+  });
+  document.getElementById('camera-file').addEventListener('change', function(){
+    if (this.files && this.files[0]) {
+      previewFile(this.files[0]);
+      setFileToInput(this.files[0]);
+    }
+  });
+
+  // Drag and drop setup
+  setupDragDrop();
+
+  // Job card
+  document.getElementById('b-jc-bk').addEventListener('click', function(){ go('s-job'); });
+  document.getElementById('btn-sim').addEventListener('click', showQuotes);
+  document.getElementById('b-book-again').addEventListener('click', resetJob);
+
+  // Profile
+  document.getElementById('b-prof-bk').addEventListener('click', function(){ go('s-job'); });
+  document.getElementById('b-cust-lo').addEventListener('click', function(){
+    signOut(auth).catch(function(){});
+    clearSession('cust');
+    S.custUser = null; S.custHistory = [];
+    document.getElementById('j-zip').value = '';
+    document.getElementById('job-avatar').textContent = '';
+    go('s-land');
+    toast('Logged out', '');
+  });
+
+  // Contractor gate
+  document.getElementById('b-gate-bk').addEventListener('click', function(){ go('s-land'); });
+  document.getElementById('b-gate-li').addEventListener('click', function(){ go('s-login'); });
+  document.getElementById('b-gate-su').addEventListener('click', function(){ go('s-su'); });
+  document.getElementById('b-redeem').addEventListener('click', function(){
+    var code = document.getElementById('code-in').value.trim().toUpperCase();
+    var err = document.getElementById('code-err');
+    if (CODES.indexOf(code) > -1) {
+      err.classList.remove('show');
+      enterPortal({fn:'Contractor',ln:'',biz:'My Business',plan:'pro',init:'CT',em:''});
+    } else { err.classList.add('show'); }
+  });
+
+  // Contractor login
+  document.getElementById('b-li-bk').addEventListener('click', function(){ go('s-gate'); });
+  document.getElementById('b-li-go').addEventListener('click', function(){
+    var em = document.getElementById('li-em').value.trim().toLowerCase();
+    var pw = document.getElementById('li-pw').value;
+    var err = document.getElementById('li-err');
+    signInWithEmailAndPassword(auth, em, pw)
+      .then(async function(cred) {
+        err.classList.remove('show');
+        var proData = await fbGetPro(cred.user.uid);
+        if (proData) {
+          proData.init = ((proData.fn||'C')[0] + (proData.ln||'T')[0]).toUpperCase();
+          S.proQuotes = await fbGetQuotes(cred.user.uid);
+          enterPortal(proData);
+        } else {
+          var fallback = window._pros[em] || {fn:'Pro',ln:'',biz:'',plan:'pro',em:em,ph:'',init:'CT'};
+          enterPortal(fallback);
+        }
+      })
+      .catch(function() { err.classList.add('show'); });
+  });
+  document.getElementById('b-li-2su').addEventListener('click', function(){ go('s-su'); });
+
+  // Contractor signup
+  document.getElementById('b-su-bk').addEventListener('click', function(){ go('s-gate'); });
+  document.getElementById('plan-s').addEventListener('click', function(){ selectPlan('starter'); });
+  document.getElementById('plan-p').addEventListener('click', function(){ selectPlan('pro'); });
+  document.getElementById('plan-e').addEventListener('click', function(){ selectPlan('elite'); });
+  document.getElementById('b-su-go').addEventListener('click', function(){
+    var fn = document.getElementById('su-fn').value.trim();
+    var ln = document.getElementById('su-ln').value.trim();
+    var biz = document.getElementById('su-biz').value.trim();
+    var em = document.getElementById('su-em').value.trim().toLowerCase();
+    var ph = document.getElementById('su-ph') ? document.getElementById('su-ph').value.trim() : '';
+    var pw = document.getElementById('su-pw').value;
+    var err = document.getElementById('su-err');
+    if (!fn||!biz||!em||!pw) { err.classList.add('show'); return; }
+    if (pw.length < 6) { err.textContent='Password must be at least 6 characters.'; err.classList.add('show'); return; }
+    if (window._pros[em]) { err.textContent='An account with that email already exists.'; err.classList.add('show'); return; }
+    err.classList.remove('show');
+    var newPro = {fn:fn,ln:ln||'',biz:biz,plan:S.plan,em:em,ph:ph,init:(fn[0]+(ln?ln[0]:fn[1]||'X')).toUpperCase()};
+    createUserWithEmailAndPassword(auth, em, pw)
+      .then(async function(cred) {
+        newPro.uid = cred.user.uid;
+        await fbSavePro(cred.user.uid, newPro);
+        window._pros[em] = newPro;
+        savePros();
+        S.proQuotes = [];
+        enterPortal(newPro);
+        toast('Pro account created!', 'success');
+      })
+      .catch(function(err) {
+        var e = document.getElementById('su-err');
+        if (err.code === 'auth/email-already-in-use') { e.textContent = 'An account with that email already exists.'; }
+        else { e.textContent = 'Error: ' + err.message; }
+        e.classList.add('show');
+      });
+  });
+
+  // Portal
+  document.getElementById('b-portal-lo').addEventListener('click', function(){ clearSession('pro'); S.proUser=null; S.proQuotes=[]; go('s-land'); toast('Logged out',''); });
+  document.getElementById('ptab-feed').addEventListener('click', function(){ showTab('feed'); });
+  document.getElementById('ptab-quotes').addEventListener('click', function(){ showTab('quotes'); });
+  document.getElementById('ptab-earn').addEventListener('click', function(){ showTab('earn'); });
+
+  // Quote submit
+  document.getElementById('b-qs-bk').addEventListener('click', function(){ go('s-portal'); });
+  document.getElementById('b-send-q').addEventListener('click', function(){
+    var price = parseInt(document.getElementById('q-price').value);
+    if (!price || price <= 0) { toast('Enter your quote price', 'error'); return; }
+    var avail = document.getElementById('q-avail').value;
+    var qEntry = {job: S.activeJob ? S.activeJob.title : 'Job', price:price, avail:avail, status:'Pending'};
+    S.proQuotes.push(qEntry);
+    if (S.proUser && S.proUser.em) saveProQuotes(S.proUser.em, S.proQuotes);
+    if (auth.currentUser) {
+      fbSaveQuote({...qEntry, proUid: auth.currentUser.uid, proName: S.proUser ? S.proUser.fn : ''}).catch(function(){});
+    }
+    renderMyQuotes();
+    toast('Quote sent! Customer notified.', 'success');
+    setTimeout(function(){ showTab('quotes'); go('s-portal'); }, 700);
+  });
+
+  // API key modal
+  document.getElementById('b-save-key').addEventListener('click', saveApiKey);
+  document.getElementById('api-key-input').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') saveApiKey();
+  });
+
+  // Logo clicks go home (except on landing and analyzing/booked where it doesn't make sense)
+  document.querySelectorAll('.logo-home').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var active = document.querySelector('.screen.active');
+      if (active && active.id !== 's-land' && active.id !== 's-ana') {
+        go('s-land');
+      }
+    });
+  });
+
+  // About page
+  document.getElementById('btn-about').addEventListener('click', function(){ go('s-about'); });
+  document.getElementById('b-about-bk').addEventListener('click', function(){ go('s-land'); });
+  document.getElementById('b-about-start').addEventListener('click', function(){ go('s-cg'); });
+  document.getElementById('b-about-pro').addEventListener('click', function(){ go('s-gate'); });
+
+  // Landing hover effects
+  var bh = document.getElementById('btn-home');
+  var bp = document.getElementById('btn-pro');
+  bh.addEventListener('mouseover', function(){ this.style.borderColor='var(--gold-border)'; this.style.transform='translateY(-2px)'; });
+  bh.addEventListener('mouseout', function(){ this.style.borderColor='var(--line2)'; this.style.transform=''; });
+  bp.addEventListener('mouseover', function(){ this.style.borderColor='var(--gold)'; this.style.transform='translateY(-2px)'; });
+  bp.addEventListener('mouseout', function(){ this.style.borderColor='var(--line2)'; this.style.transform=''; });
+
+  // Restore saved API key
+  var saved = localStorage.getItem('quoto_key');
+  if (saved) S.apiKey = saved;
+
+  // Init feed
+  renderFeed();
+  renderMyQuotes();
+
+  // ── AUTO-LOGIN: restore sessions ──
+  var custSess = loadSession('cust');
+  if (custSess && custSess.em && window._users[custSess.em]) {
+    var cu = window._users[custSess.em];
+    enterCustomer(cu);
+  }
+  var proSess = loadSession('pro');
+  if (proSess && proSess.em && window._pros[proSess.em]) {
+    var pu = window._pros[proSess.em];
+    pu.init = ((pu.fn||'C')[0] + (pu.ln||'T')[0]).toUpperCase();
+    S.proQuotes = loadProQuotes(pu.em);
+    enterPortal(pu);
+  }
+});
+
+</script>
+</body>
+</html>
